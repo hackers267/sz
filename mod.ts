@@ -1,3 +1,4 @@
+import { green, red } from "./deps.ts";
 await genService();
 
 async function genService() {
@@ -8,8 +9,8 @@ async function genService() {
     Deno.writeTextFile("service/fun.ts", ""),
     Deno.writeTextFile("service/fun.test.ts", ""),
   ]).then(() => {
-    console.log("Create Service,Success");
+    console.log(green("Create Service,Success"));
   }).catch((e) => {
-    console.error(e);
+    console.log(red(e));
   });
 }
