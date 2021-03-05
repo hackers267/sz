@@ -1,34 +1,16 @@
-import { green, red } from "./deps.ts";
+import {genService} from "./service.ts";
+import {red} from "./deps.ts";
+import {commands} from "./constant.ts";
+import {disValidInput, validInput} from "./utils.ts";
 
 const files = ["index.ts", "fetch.ts", "fun.ts", "fun.test.ts"];
+const input_commands = Deno.args.filter((item) => item.startsWith("-"));
 
-await genService(files);
-
-async function genService(files: string[]) {
-  try {
-    await Deno.mkdir("service");
-  } catch (e) {
-    console.log(red("mkdir dir error,because the dir existed!"));
-  } finally {
-    const filePromises = files.map((x) => `service/${x}`).filter((x) =>
-      fileExist(x)
-    ).map((x) => {
-      Deno.writeTextFile(x, "");
-      return x;
-    });
-    Promise.all(filePromises).then((strings) => {
-      strings.forEach((s) => console.log(green(`Create ${s} Service,Success`)));
-    }).catch(() => {
-      console.log(red("Something Error"));
-    });
+if (validInput(input_commands, commands)) {
+  if (input_commands.includes('-s')){
+      genService(files);
   }
-}
-
-function fileExist(file: string) {
-  try {
-    Deno.statSync(file);
-    return false;
-  } catch (e) {
-    return true;
-  }
+} else {
+  const dis_valid_input = disValidInput(input_commands, commands);
+  console.log(`Sorry, the args ${red(dis_valid_input)} is unsupported`);
 }
